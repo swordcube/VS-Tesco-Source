@@ -182,7 +182,7 @@ class FunkinLua {
 		set('timeBarType', ClientPrefs.timeBarType);
 		set('scoreZoom', ClientPrefs.scoreZoom);
 		set('cameraZoomOnBeat', ClientPrefs.camZooms);
-		set('flashingLights', ClientPrefs.flashing);
+		set('photoSensitive', ClientPrefs.photoSensitive);
 		set('noteOffset', ClientPrefs.noteOffset);
 		set('healthBarAlpha', ClientPrefs.healthBarAlpha);
 		set('noResetButton', ClientPrefs.noReset);

@@ -24,11 +24,10 @@ class FlashingState extends MusicBeatState
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey, watch out!\n
-			This Mod contains some flashing lights!\n
-			Press ENTER to disable them now or go to Options Menu.\n
-			Press ESCAPE to ignore this message.\n
-			You've been warned!",
+			"VS Tesco contains content that might not be suited\n" +
+			"for photosensitive people. Please do one of the following:\n\n" +
+			"Press ENTER to continue to allow flashing lights and such.\n" +
+			"Press ESCAPE to enable photosensitive mode.",
 			32);
 		warnText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
@@ -44,7 +43,7 @@ class FlashingState extends MusicBeatState
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				if(!back) {
-					ClientPrefs.flashing = false;
+					ClientPrefs.photoSensitive = false;
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
@@ -53,6 +52,8 @@ class FlashingState extends MusicBeatState
 						});
 					});
 				} else {
+					ClientPrefs.photoSensitive = true;
+					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {
 						onComplete: function (twn:FlxTween) {

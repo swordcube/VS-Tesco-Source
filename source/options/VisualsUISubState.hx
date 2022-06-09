@@ -56,11 +56,11 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
 
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
-			'flashing',
+		var option:Option = new Option('Photosensitive Mode',
+			"Turn this on if you're photosensitive to certain things!",
+			'photoSensitive',
 			'bool',
-			true);
+			false);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',
