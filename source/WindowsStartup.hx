@@ -20,7 +20,7 @@ class WindowsStartup extends MusicBeatState
 
         FlxG.mouse.visible = false;
 
-		FlxG.game.focusLostFramerate = 60;
+		FlxG.game.focusLostFramerate = 10;
 		FlxG.sound.muteKeys = TitleState.muteKeys;
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
@@ -28,8 +28,6 @@ class WindowsStartup extends MusicBeatState
 
         FlxTransitionableState.skipNextTransIn = true;
         FlxTransitionableState.skipNextTransOut = true;
-
-        trace("haha this is gonna take up alot of memory isn't it");
 
         bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF567cb0);
         bg.visible = false;
@@ -44,6 +42,8 @@ class WindowsStartup extends MusicBeatState
         windows7.updateHitbox();
         windows7.screenCenter();
         add(windows7);
+
+        FlxG.sound.play(Paths.sound('windows7Startup'));
     }
 
     var booted:Bool = false;
@@ -62,10 +62,15 @@ class WindowsStartup extends MusicBeatState
 
             new FlxTimer().start(1, function(tmr:FlxTimer) {
                 bg.visible = true;
-                new FlxTimer().start(0.5, function(tmr:FlxTimer) {
+                new FlxTimer().start(0.1, function(tmr:FlxTimer) {
                     FlxG.switchState(new TitleState());
                 });
             });
         }
+
+        #if debug
+        if(FlxG.keys.justPressed.ENTER)
+            FlxG.switchState(new TitleState());
+        #end
     }
 }
