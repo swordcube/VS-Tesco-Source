@@ -145,7 +145,7 @@ class TitleState extends MusicBeatState
 				"Bread.",
 				"Funky Tesco.",
 				"Super Idol.",
-				"heheheha",
+				"heheheha!",
 				"I love bags!!",
 				"Brand spankin new!",
 				"Are you gay?",
@@ -154,26 +154,26 @@ class TitleState extends MusicBeatState
 				"Clubcard DENIED.",
 				"Do you want phone?",
 				"FL Studio has died.",
-				"OREO CREAM",
+				"OREO CREAM!",
 				"bri\'ish??",
 				"yellow teeth??",
-				"walmar",
-				"asda",
+				"walmar.",
+				"asda.",
 				"like and subscri be!",
-				"unexpected ass",
-				"Adobe Laughter",
+				"unexpected ass.",
+				"Adobe Laughter!",
 				"WANT A BREAK FROM THE ADS?",
-				"yootoob premum",
+				"yootoob premum.",
 				"how to friday fuckin!?",
 				"*notices your-* NO.",
 				"click this text for a cookie!",
-				"ITS BLOMMIN £3.50 IM FUMIN",
-				"upgrad to window 10",
+				"ITS BLOMMIN £3.50 IM FUMIN!!",
+				"upgrad to window 10.",
 				"RTC Connecting...",
-				"Kayne Central",
+				"Kayne Central.",
 				"osu!tesco",
-				"you stinky",
-				"egg plant",
+				"you stinky.",
+				"egg plant.",
 				"exodussy."
 			];
 
@@ -181,9 +181,6 @@ class TitleState extends MusicBeatState
 				".",
 				"!",
 				"?",
-				"??",
-				"!?",
-				"?!"
 			];
 
 			var genText:String = funnyTexts[FlxG.random.int(0, funnyTexts.length - 1)];
@@ -192,12 +189,37 @@ class TitleState extends MusicBeatState
 			var dots:Array<String> = [];
 
 			var char_i:Int = 0;
-			for(c in arrayText)
+			for(c in skipCharacters)
 			{
-				if(skipCharacters.contains(c))
+				// look ik this is probably a bad way of doing this
+				// but i don't care lmao
+
+				switch(genText)
 				{
-					arrayText.remove(c);
-					dots.push(c);
+					case "ITS BLOMMIN £3.50 IM FUMIN!!":
+						if(c != ".")
+						{
+							while(arrayText.contains(c))
+							{
+								arrayText.remove(c);
+								dots.push(c);
+							}
+						}
+					case "osu!tesco":
+						if(c != "!")
+						{
+							while(arrayText.contains(c))
+							{
+								arrayText.remove(c);
+								dots.push(c);
+							}
+						}
+					default:
+						while(arrayText.contains(c))
+						{
+							arrayText.remove(c);
+							dots.push(c);
+						}
 				}
 				char_i++;
 			}
