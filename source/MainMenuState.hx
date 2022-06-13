@@ -1,5 +1,7 @@
 package;
 
+import staffID.StaffIDMenu;
+import flixel.FlxBasic;
 import flixel.group.FlxSpriteGroup;
 #if desktop
 import Discord.DiscordClient;
@@ -29,6 +31,8 @@ class MainMenuState extends MusicBeatState
 	public static var vsTescoVersion:String = '3.0'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
+	public static var instance:MainMenuState;
+
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
 
@@ -37,14 +41,39 @@ class MainMenuState extends MusicBeatState
 	var tescoLogo:FlxSprite;
 	var youtubeButton:FlxSprite;
 	var twitterButton:FlxSprite;
+	var freeplayButton:FlxSprite;
+	var awardsButton:FlxSprite;
 
-	var storyModeItems:Array<ItemData> = [];
+	var storyModeButton:FlxSprite;
+	var staffIDButton:FlxSprite;
+
+	var returnButton:FlxSprite;
+
+	var storyModeItems:Array<ItemData> = [
+		{
+			itemName: "Week 1",
+			itemWeight: "Self Checkout",
+			itemPrice: 0
+		}
+	];
 
 	var itemData:Array<ItemData> = [];
 	var items:FlxTypedGroup<TescoItem>;
 
+	public function new()
+	{
+		super();
+
+		instance = this;
+	}
+
+	public var inStaffID:Bool = false;
+
 	override function create()
 	{
+		persistentUpdate = false;
+		persistentDraw = true;
+
 		WeekData.loadTheFirstEnabledMod();
 
 		#if desktop
@@ -78,6 +107,8 @@ class MainMenuState extends MusicBeatState
 			}
 		}
 		#end
+
+		FlxG.mouse.visible = true;
 
 		var grayBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFFF6F6F6);
 		add(grayBG);
@@ -147,6 +178,61 @@ class MainMenuState extends MusicBeatState
 		sideBar.x = FlxG.width - sideBar.width;
 		add(sideBar);
 
+		var nameTxt:FlxText = new FlxText(sideBar.x + 15, 95, 0, randomItem.itemName, 32);
+		nameTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, LEFT);
+		nameTxt.antialiasing = ClientPrefs.globalAntialiasing;
+		add(nameTxt);
+
+		var priceTxt:FlxText = new FlxText(0, nameTxt.y, 0, "£" + randomItem.itemPrice, 32);
+		priceTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, RIGHT);
+		priceTxt.antialiasing = ClientPrefs.globalAntialiasing;
+		priceTxt.x = sideBar.x + (sideBar.width - (priceTxt.width + 15));
+		add(priceTxt);
+
+		var totalTxt:FlxText = new FlxText(0, sideBar.height - 160, 0, "Total:", 32);
+		totalTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, LEFT);
+		totalTxt.antialiasing = ClientPrefs.globalAntialiasing;
+		totalTxt.x = sideBar.x + 15;
+		add(totalTxt);
+
+		var totalPriceTxt:FlxText = new FlxText(0, totalTxt.y, 0, "£" + randomItem.itemPrice, 32);
+		totalPriceTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, RIGHT);
+		totalPriceTxt.antialiasing = ClientPrefs.globalAntialiasing;
+		totalPriceTxt.x = sideBar.x + (sideBar.width - (priceTxt.width + 15));
+		add(totalPriceTxt);
+
+		freeplayButton = new FlxSprite(totalTxt.x, totalTxt.y + 50).loadGraphic(Paths.image('tescoAssets/CampaignMenu/CM_Freeplay'));
+		freeplayButton.antialiasing = ClientPrefs.globalAntialiasing;
+		freeplayButton.scale.set(0.67, 0.67);
+		freeplayButton.updateHitbox();
+		add(freeplayButton);
+
+		awardsButton = new FlxSprite(0, 25).loadGraphic(Paths.image('tescoAssets/CampaignMenu/CM_Awards'));
+		awardsButton.antialiasing = ClientPrefs.globalAntialiasing;
+		awardsButton.scale.set(0.67, 0.67);
+		awardsButton.updateHitbox();
+		awardsButton.x = sideBar.x + (sideBar.width - (awardsButton.width + 15));
+		add(awardsButton);
+
+		storyModeButton = new FlxSprite(15, items.members[0].y + (items.members[0].height + 15)).loadGraphic(Paths.image('tescoAssets/CampaignMenu/CM_StoryModeButton'));
+		storyModeButton.antialiasing = ClientPrefs.globalAntialiasing;
+		storyModeButton.scale.set(0.67, 0.67);
+		storyModeButton.updateHitbox();
+		add(storyModeButton);
+
+		staffIDButton = new FlxSprite(storyModeButton.x + (storyModeButton.width + 15), storyModeButton.y).loadGraphic(Paths.image('tescoAssets/CampaignMenu/CM_StaffID'));
+		staffIDButton.antialiasing = ClientPrefs.globalAntialiasing;
+		staffIDButton.scale.set(0.67, 0.67);
+		staffIDButton.updateHitbox();
+		add(staffIDButton);
+
+		returnButton = new FlxSprite(youtubeButton.x, youtubeButton.y - (youtubeButton.height + 5)).loadGraphic(Paths.image('tescoAssets/FreeplayMenu/FP_Return'));
+		returnButton.antialiasing = ClientPrefs.globalAntialiasing;
+		returnButton.scale.set(0.67, 0.67);
+		returnButton.updateHitbox();
+		returnButton.visible = false;
+		add(returnButton);
+
 		// Play da funny menu music
 		if(FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing))
 			FlxG.sound.playMusic(Paths.music("freakyMenu"), 1);
@@ -156,7 +242,7 @@ class MainMenuState extends MusicBeatState
 
 	var randomItem:ItemData;
 
-	var isStoryMode:Bool = false;
+	public var isStoryMode:Bool = false;
 
 	function generateItems()
 	{
@@ -200,10 +286,48 @@ class MainMenuState extends MusicBeatState
 		if(FlxG.sound.music.volume < 0.8)
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 
-		if(controls.BACK)
+		if(!inStaffID && controls.BACK)
 			MusicBeatState.switchState(new TitleState());
 
+		if(isObjectClicked(freeplayButton))
+			MusicBeatState.switchState(new FreeplayState());
+
+		if(isObjectClicked(storyModeButton) && storyModeButton.visible)
+		{
+			isStoryMode = true;
+			storyModeButton.visible = false;
+			staffIDButton.visible = false;
+			returnButton.visible = true;
+			generateItems();
+		}
+
+		if(isObjectClicked(staffIDButton) && staffIDButton.visible)
+		{
+			inStaffID = true;
+			openSubState(new staffID.StaffIDMenu());
+		}
+
+		if(isObjectClicked(returnButton) && returnButton.visible)
+		{
+			isStoryMode = false;
+			storyModeButton.visible = true;
+			staffIDButton.visible = true;
+			returnButton.visible = false;
+			generateItems();
+		}
+
+		if(isObjectClicked(awardsButton))
+			MusicBeatState.switchState(new AchievementsMenuState());
+
 		super.update(elapsed);
+	}
+
+	function isObjectClicked(object:FlxBasic)
+	{
+		if(FlxG.mouse.justPressed && FlxG.mouse.overlaps(object))
+			return true;
+
+		return false;
 	}
 }
 
@@ -241,7 +365,10 @@ class TescoItem extends FlxSpriteGroup
 		bg.updateHitbox();
 		add(bg);
 
-		icon = new FlxSprite(15, 15).loadGraphic(Paths.image('tescoAssets/CampaignMenu/items/$itemName'));
+		if(MainMenuState.instance.isStoryMode)
+			icon = new FlxSprite(15, 15).loadGraphic(Paths.image('tescoAssets/CampaignMenu/storymode/$itemName'));
+		else
+			icon = new FlxSprite(15, 15).loadGraphic(Paths.image('tescoAssets/CampaignMenu/items/$itemName'));
 		icon.antialiasing = ClientPrefs.globalAntialiasing;
 		icon.setGraphicSize(Std.int(bg.height - 25), Std.int(bg.height - 25));
 		icon.updateHitbox();
@@ -262,15 +389,26 @@ class TescoItem extends FlxSpriteGroup
 			thingie = "KG";
 		}
 
-		weightTxt = new FlxText(icon.x + (icon.width + 15), 50, 0, displayWeight + thingie, 32);
+		var stringWeight:String = Std.string(displayWeight);
+
+		if(MainMenuState.instance.isStoryMode)
+		{
+			stringWeight = itemWeight;
+			thingie = "";
+		}
+
+		weightTxt = new FlxText(icon.x + (icon.width + 15), 50, 0, stringWeight + thingie, 32);
 		weightTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, LEFT);
 		weightTxt.antialiasing = ClientPrefs.globalAntialiasing;
 		add(weightTxt);
 
-		priceTxt = new FlxText(0, 15, 0, "£" + itemPrice, 32);
-		priceTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, LEFT);
-		priceTxt.antialiasing = ClientPrefs.globalAntialiasing;
-		priceTxt.x = bg.width - (priceTxt.width + 15);
-		add(priceTxt);
+		if(!MainMenuState.instance.isStoryMode)
+		{
+			priceTxt = new FlxText(0, 15, 0, "£" + itemPrice, 32);
+			priceTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF2b2b2b, LEFT);
+			priceTxt.antialiasing = ClientPrefs.globalAntialiasing;
+			priceTxt.x = bg.width - (priceTxt.width + 15);
+			add(priceTxt);
+		}
 	}
 }

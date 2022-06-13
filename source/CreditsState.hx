@@ -83,7 +83,7 @@ class CreditsState extends MusicBeatState
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['VS Tesco Team'],
 			['swordcube',     		'tesco/sword',		'Main Programmer of VS Tesco',  							'https://twitter.com/swordcube',	    '83b4ec'],
-			['Jadyn',     	    	'tesco/jadyn',		'Modchart Guy and The Music guy',  							'https://twitter.com/JadynSmells_',	    'fabce9'],
+			['Jadyn',     	    	'tesco/jadyn',		'Modchart Guy and The Music guy',  							'https://twitter.com/JadynSmells',	    'fabce9'],
 			['Pink Ruv',     	  	'tesco/pinkruv',	'The guy with art talent',                           		'https://twitter.com/kirbiruv',	        'fe007c'],
 			['Enderience',     	  	'tesco/enderience',	'the Cutscene guy',                           		        'https://youtube.com/enderience',	    'd477ff'],
 			[''],

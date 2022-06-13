@@ -117,10 +117,7 @@ class TitleState extends MusicBeatState
 
 			FlxG.mouse.visible = true;
 
-			var windowCursor:FlxSprite = new FlxSprite();
-			windowCursor.loadGraphic(Paths.image('windowCursor'));
-			add(windowCursor);
-			FlxG.mouse.load(windowCursor.pixels);
+			FlxG.mouse.load(Paths.image('windowCursor').bitmap.clone());
 
 			// Play da funny menu music
 			if(FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing))
@@ -306,7 +303,7 @@ class TitleState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 
 		if(isObjectClicked(ostButton))
-			CoolUtil.browserLoad("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+			CoolUtil.browserLoad("https://www.youtube.com/playlist?list=PLMn10BObyn_erICjEGQJXVUvbttbtEpN9");
 
 		if(isObjectClicked(creditsButton))
 			MusicBeatState.switchState(new CreditsState());
